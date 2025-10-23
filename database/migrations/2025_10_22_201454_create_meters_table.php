@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('meters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
+            $table->foreignId('address_id')->constrained()->cascadeOnDelete();
             $table->string('type');
             $table->string('unit')->nullable();
             $table->text('description')->nullable();
+            $table->unsignedTinyInteger('submission_day')->nullable()->comment('День місяця для подання показань (1-31)');
             $table->timestamps();
 
-            $table->index(['user_id', 'type']);
+            $table->index(['address_id', 'type']);
         });
     }
 
