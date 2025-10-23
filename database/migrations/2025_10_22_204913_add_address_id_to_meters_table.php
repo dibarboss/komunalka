@@ -23,7 +23,13 @@ return new class extends Migration
         }
 
         if (Schema::hasColumn('meters', 'user_id')) {
-            DB::statement('DROP INDEX IF EXISTS meters_user_id_type_index');
+            // Перевіряємо та видаляємо індекс якщо існує (сумісно з MySQL)
+            $indexes = DB::select("SHOW INDEX FROM meters WHERE Key_name = 'meters_user_id_type_index'");
+            if (!empty($indexes)) {
+                Schema::table('meters', function (Blueprint $table) {
+                    $table->dropIndex('meters_user_id_type_index');
+                });
+            }
 
             Schema::table('meters', function (Blueprint $table) {
                 $table->dropConstrainedForeignId('user_id');
